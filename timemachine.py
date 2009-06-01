@@ -16,20 +16,19 @@ def prompt(msg, dflt):
         except ValueError:
             print "That doesn't look like a number."
 
-def updateTimestamps(d):
+def updateTimestamps(yrs, mths, dys):
     for f in os.listdir("."):
-        ot = time.localtime(os.path.getmtime(f))
-        nt = ()
-        print dt
+        ot = os.path.getmtime(f)
+        mt = (dys*60*60*24) + (mths*30*60*60*24) + (yrs*12*30*60*60*24)
+                
+        print time.gmtime(ot+mt)
 
 def main():
     yrs = prompt("Delta years?", 0)
     mths = prompt("Delta months?", 0)
     dys = prompt("Delta days?", 0)
-    hrs = prompt("Delta hours?", 0)
-    mins = prompt("Delta minutes?", 0)
 
-    updateTimestamps((yrs, mths, dys, hrs, mins, 0, 0, 0, 0))
+    updateTimestamps(yrs, mths, dys)
 
 if __name__ == "__main__":
     try:
