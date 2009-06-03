@@ -22,8 +22,16 @@ def updateTimestamps(yrs, mths, dys):
     def do_update(dt, path, fs):
         for f in fs:
             fp = os.path.join(path, f)
-            t = os.path.getmtime(fp) + dt
-            os.utime(fp, (t, t))
+            try:
+                ft = time.gmtime(os.path.getmtime(fp))
+                print "Updated timestamp of %s from %d-%d-%d" % (fp, ft.tm_year, ft.tm_mon, ft.tm_mday),
+                t = os.path.getmtime(fp) + dt
+                os.utime(fp, (t, t))
+                ft = time.gmtime(os.path.getmtime(fp))
+                print "to %d-%d-%d" % (ft.tm_year, ft.tm_mon, ft.tm_mday)
+            except:
+                print "Failed update of ", fp
+            
         
     os.path.walk(".", do_update, mt)
 
@@ -37,6 +45,7 @@ def main():
 if __name__ == "__main__":
     try:
         main()
-    except Exception as e:
-        print "Faulted with exception:"
-        print e
+    except:
+        print "Something bad happened"
+    finally:
+        raw_input()
