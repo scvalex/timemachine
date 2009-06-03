@@ -17,11 +17,15 @@ def prompt(msg, dflt):
             print "That doesn't look like a number."
 
 def updateTimestamps(yrs, mths, dys):
-    for f in os.listdir("."):
-        ot = os.path.getmtime(f)
-        mt = (dys*60*60*24) + (mths*30*60*60*24) + (yrs*12*30*60*60*24)
-                
-        print time.gmtime(ot+mt)
+    mt = (dys*60*60*24) + (mths*30*60*60*24) + (yrs*12*30*60*60*24)
+
+    def do_update(dt, path, fs):
+        for f in fs:
+            fp = os.path.join(path, f)
+            t = os.path.getmtime(fp) + dt
+            os.utime(fp, (t, t))
+        
+    os.path.walk(".", do_update, mt)
 
 def main():
     yrs = prompt("Delta years?", 0)
