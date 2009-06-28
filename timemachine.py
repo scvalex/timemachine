@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import datetime
 import os
 import os.path
 import time
@@ -17,23 +18,23 @@ def prompt(msg, dflt):
             print "That doesn't look like a number."
 
 def updateTimestamps(yrs, mths, dys):
-    mt = (dys*60*60*24) + (mths*30*60*60*24) + (yrs*12*30*60*60*24)
+    td = datetime.timedelta(yrs*365 + mths*31 + dys)
 
-    def do_update(dt, path, fs):
+    def do_update(td, path, fs):
         for f in fs:
             fp = os.path.join(path, f)
             try:
-                ft = time.gmtime(os.path.getmtime(fp))
-                print "Updated timestamp of %s from %d-%d-%d" % (fp, ft.tm_year, ft.tm_mon, ft.tm_mday),
-                t = os.path.getmtime(fp) + dt
+                ft = datetime.date.fromtimestamp(os.path.getmtime(fp))
+                print "Updated timestamp of %s from %d-%d-%d" % (fp, ft.year, ft.month, ft.day),
+                t =  ft + td
+                print "to %d-%d-%d" % (t.year, t.month, t.day)
+                t = time.mktime(t.timetuple())
                 os.utime(fp, (t, t))
-                ft = time.gmtime(os.path.getmtime(fp))
-                print "to %d-%d-%d" % (ft.tm_year, ft.tm_mon, ft.tm_mday)
             except:
                 print "Failed update of ", fp
             
         
-    os.path.walk(".", do_update, mt)
+    os.path.walk(".", do_update, td)
 
 def main():
     yrs = prompt("Delta years?", 0)
@@ -43,9 +44,9 @@ def main():
     updateTimestamps(yrs, mths, dys)
 
 if __name__ == "__main__":
-    try:
+#    try:
         main()
-    except:
-        print "Something bad happened"
-    finally:
-        raw_input()
+#    except:
+#        print "Something bad happened"
+#    finally:
+#        raw_input()
