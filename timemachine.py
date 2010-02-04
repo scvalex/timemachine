@@ -32,8 +32,8 @@ def updateTimestamps(yrs, mths, dys):
                 os.utime(fp, (t, t))
             except:
                 print "Failed update of ", fp
-            
-        
+
+
     os.path.walk(".", do_update, td)
 
 def main():
