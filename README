@@ -1,0 +1,6 @@
+timemachine.py
+==============
+
+Alter the timestamps of all files in the current directory.
+(this makes sense on Windows)
+
